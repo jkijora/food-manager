@@ -7,6 +7,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("products")
@@ -24,13 +26,20 @@ public class ProductController {
         return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
     }
 
+    @GetMapping
+    public ResponseEntity<List<Product>> getAllProducts() {
+        return ResponseEntity.ok(productRepository.findAll());
+    }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Product addProduct(@RequestBody Product product) {
         return productRepository.save(product);
     }
 
-    @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PatchMapping(
+            value = "/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Product> changeQuantity(@RequestBody Integer quantity, @PathVariable Long id) {
 
@@ -40,6 +49,7 @@ public class ProductController {
         log.debug("Successfully changed the quantity of the product");
         return ResponseEntity.ok().body(saved);
     }
+
 
     @ExceptionHandler
     public ResponseEntity<?> handle(ProductNotFoundException productNotFoundException) {

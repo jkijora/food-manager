@@ -21,15 +21,10 @@ public class FoodmanagerApplication {
     public CommandLineRunner demo(ProductRepository pr) {
         return (args) -> {
 
-//            Product.builder()
-//                            .name()
-
             pr.save(new Product(12, "Mleko", "Płynne"));
             pr.save(new Product(2, "Buraczki", "Słoiki"));
             pr.save(new Product(2, "Kukurydza", "Puszki"));
             pr.save(new Product(4, "Kokosowe Mleczko", "Puszki"));
-
-
 
             pr.findDistinctCategories().forEach(log::info);
         };
