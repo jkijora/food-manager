@@ -39,4 +39,13 @@ public class Product {
         this.name = name;
         this.category = category;
     }
+
+    public Product(int quantity, String name, String category, @Nullable String comment, int quantityThreshold, @Nullable LocalDate closestExpiration) {
+        this.quantity = quantity;
+        this.name = name;
+        this.category = category;
+        this.comment = comment;
+        this.quantityThreshold = quantityThreshold;
+        this.closestExpiration = closestExpiration;
+    }
 }
