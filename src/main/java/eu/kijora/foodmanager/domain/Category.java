@@ -14,11 +14,11 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
-    MainCategory mainCategory;
+//    MainCategory mainCategory;
     String name;
 
-    public Category(MainCategory mainCategory, String name) {
-        this.mainCategory = mainCategory;
+    public Category(String name) {
+//        this.mainCategory = mainCategory;
         this.name = name;
     }
 }

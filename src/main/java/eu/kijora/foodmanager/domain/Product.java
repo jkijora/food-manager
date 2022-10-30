@@ -1,14 +1,18 @@
 package eu.kijora.foodmanager.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.lang.Nullable;
+
+import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
+@Table(name = "products")
 public class Product {
 
     @Id
@@ -17,11 +21,20 @@ public class Product {
     private Long id;
     private int quantity;
     private String name;
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+//    @ManyToOne
+//    @JoinColumn(name = "category_id")
+//    private Category category;
+    private String category;
 
-    public Product(int quantity, String name, Category category) {
+    @Nullable
+    private String comment;
+    @Nullable
+    private int quantityThreshold;
+    @Nullable
+    private LocalDate closestExpiration;
+
+
+    public Product(int quantity, String name, String category) {
         this.quantity = quantity;
         this.name = name;
         this.category = category;
