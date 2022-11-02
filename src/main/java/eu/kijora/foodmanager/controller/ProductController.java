@@ -2,7 +2,7 @@ package eu.kijora.foodmanager.controller;
 
 import eu.kijora.foodmanager.domain.Category;
 import eu.kijora.foodmanager.domain.Product;
-import eu.kijora.foodmanager.dto.ProductDto;
+import eu.kijora.foodmanager.dto.ProductReadModel;
 import eu.kijora.foodmanager.repository.CategoryRepository;
 import eu.kijora.foodmanager.repository.ProductRepository;
 import eu.kijora.foodmanager.service.MappingService;
@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,18 +32,27 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public Product getProduct(@PathVariable Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
+    public ProductReadModel getProduct(@PathVariable Long id) {
+        return mappingService.convertProductIntoDto(productRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found")));
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        return ResponseEntity.ok(productRepository.findAll());
+    public ResponseEntity<List<ProductReadModel>> getAllProducts() {
+        return ResponseEntity.ok(productRepository.findAll().stream()
+                .map(p -> mappingService.convertProductIntoDto(p))
+                .collect(Collectors.toList()));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProductById(@PathVariable Long id) {
+        productRepository.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ProductDto addProduct(@RequestBody Product product) {
+    //TODO write model
+    public ProductReadModel addProduct(@RequestBody Product product) {
         Set<Category> collectedCategories = product.getCategories().stream()
                 .map(c -> categoryRepository.findById(c.getId()).orElseThrow(
                         () -> new CategoryNotFoundException(String.format("Id %d not found in database", c.getId()))))

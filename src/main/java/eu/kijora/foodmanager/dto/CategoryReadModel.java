@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class CategoryDto {
+public class CategoryReadModel {
 
     private Long id;
     String name;

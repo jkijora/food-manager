@@ -2,8 +2,8 @@ package eu.kijora.foodmanager.service;
 
 import eu.kijora.foodmanager.domain.Category;
 import eu.kijora.foodmanager.domain.Product;
-import eu.kijora.foodmanager.dto.CategoryDto;
-import eu.kijora.foodmanager.dto.ProductDto;
+import eu.kijora.foodmanager.dto.CategoryReadModel;
+import eu.kijora.foodmanager.dto.ProductReadModel;
 import eu.kijora.foodmanager.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,15 +18,15 @@ public class MappingService {
         this.productRepository = productRepository;
     }
 
-    public ProductDto convertProductIntoDto(Product product){
-        return ProductDto.builder()
+    public ProductReadModel convertProductIntoDto(Product product){
+        return ProductReadModel.builder()
                 .productId(product.getId())
                 .categories(product.getCategories().stream().map(this::convertCategoryIntoDto).collect(Collectors.toSet()))
                 .build();
     }
 
-    public CategoryDto convertCategoryIntoDto(Category category){
-        return CategoryDto.builder()
+    public CategoryReadModel convertCategoryIntoDto(Category category){
+        return CategoryReadModel.builder()
                 .id(category.getId())
                 .auxiliaryCategory(category.isAuxiliaryCategory())
                 .name(category.getName())
