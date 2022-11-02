@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.lang.Nullable;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -21,10 +22,10 @@ public class Product {
     private Long id;
     private int quantity;
     private String name;
-//    @ManyToOne
-//    @JoinColumn(name = "category_id")
-//    private Category category;
-    private String category;
+    @ManyToMany
+    @JoinTable(name = "categories_products", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name="category_id"))
+    private Set<Category> categories;
+//    private String category;
 
     @Nullable
     private String comment;
@@ -34,16 +35,16 @@ public class Product {
     private LocalDate closestExpiration;
 
 
-    public Product(int quantity, String name, String category) {
+    public Product(int quantity, String name, Set<Category> categories) {
         this.quantity = quantity;
         this.name = name;
-        this.category = category;
+        this.categories = categories;
     }
 
-    public Product(int quantity, String name, String category, @Nullable String comment, int quantityThreshold, @Nullable LocalDate closestExpiration) {
+    public Product(int quantity, String name,  Set<Category> categories, @Nullable String comment, int quantityThreshold, @Nullable LocalDate closestExpiration) {
         this.quantity = quantity;
         this.name = name;
-        this.category = category;
+        this.categories = categories;
         this.comment = comment;
         this.quantityThreshold = quantityThreshold;
         this.closestExpiration = closestExpiration;
