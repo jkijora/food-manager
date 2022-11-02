@@ -30,11 +30,21 @@ public class FoodmanagerApplication {
             Category c4 = new Category("To finish");
             cr.save(c1);
             cr.save(c2);
+            cr.save(c3);
 
-            pr.save(new Product(12, "Mleko", Set.of(cr.findById(2L).orElse(c3))));
-            pr.save(new Product(2, "Buraczki", Set.of(c1)));
-            pr.save(new Product(2, "Kukurydza", Set.of(c1)));
-            pr.save(new Product(4, "Kokosowe Mleczko", Set.of(c1)));
+            Product p1 = new Product(2, "Buraczki");
+            Product p2 = new Product(3, "Kukurydza");
+            Product p3 = new Product(5, "Kokosowe Mleczko");
+
+            p1.addCategory(c1);
+            p2.addCategory(c2);
+            p3.addCategory(c1);
+
+//            pr.save(new Product(12, "Mleko", Set.of(cr.findById(2L).orElse(c3))));
+            pr.save(p1);
+            pr.save(p2);
+            pr.save(p3);
+
 
 //            pr.findDistinctCategories().forEach(log::info);
 

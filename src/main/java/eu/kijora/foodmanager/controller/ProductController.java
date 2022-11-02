@@ -1,13 +1,20 @@
 package eu.kijora.foodmanager.controller;
 
+import eu.kijora.foodmanager.domain.Category;
 import eu.kijora.foodmanager.domain.Product;
+import eu.kijora.foodmanager.dto.ProductDto;
+import eu.kijora.foodmanager.repository.CategoryRepository;
 import eu.kijora.foodmanager.repository.ProductRepository;
+import eu.kijora.foodmanager.service.MappingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -16,9 +23,13 @@ import java.util.List;
 public class ProductController {
 
     ProductRepository productRepository;
+    CategoryRepository categoryRepository;
+    MappingService mappingService;
 
-    public ProductController(ProductRepository productRepository) {
+    public ProductController(ProductRepository productRepository, CategoryRepository categoryRepository, MappingService mappingService) {
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
+        this.mappingService = mappingService;
     }
 
     @GetMapping("/{id}")
@@ -33,8 +44,13 @@ public class ProductController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Product addProduct(@RequestBody Product product) {
-        return productRepository.save(product);
+    public ProductDto addProduct(@RequestBody Product product) {
+        Set<Category> collectedCategories = product.getCategories().stream()
+                .map(c -> categoryRepository.findById(c.getId()).orElseThrow(
+                        () -> new CategoryNotFoundException(String.format("Id %d not found in database", c.getId()))))
+                .collect(Collectors.toSet());
+        product.setCategories(collectedCategories);
+        return mappingService.convertProductIntoDto(productRepository.save(product));
     }
 
     @PatchMapping(

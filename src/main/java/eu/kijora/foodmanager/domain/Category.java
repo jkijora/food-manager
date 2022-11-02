@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @NoArgsConstructor
 @Getter
@@ -17,13 +20,19 @@ public class Category {
     String name;
     boolean auxiliaryCategory;
 
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
+    Set<Product> products;
+
     public Category(String name) {
         this.name = name;
-        auxiliaryCategory = false;
+        this.auxiliaryCategory = false;
+        this.products = new HashSet<>();
     }
 
     public Category(String name, boolean auxiliaryCategory) {
         this.name = name;
         this.auxiliaryCategory = auxiliaryCategory;
+        this.products = new HashSet<>();
+
     }
 }
