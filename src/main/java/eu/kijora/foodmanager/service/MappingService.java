@@ -12,16 +12,19 @@ import java.util.stream.Collectors;
 @Service
 public class MappingService {
 
-    private ProductRepository productRepository;
 
-    public MappingService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public MappingService() {
     }
 
     public ProductReadModel convertProductIntoDto(Product product){
         return ProductReadModel.builder()
                 .productId(product.getId())
                 .categories(product.getCategories().stream().map(this::convertCategoryIntoDto).collect(Collectors.toSet()))
+                .name(product.getName())
+                .quantity(product.getQuantity())
+                .quantityThreshold(product.getQuantityThreshold())
+                .closestExpiration(product.getClosestExpiration())
+                .comment(product.getComment())
                 .build();
     }
 

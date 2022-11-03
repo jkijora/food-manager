@@ -16,7 +16,7 @@ import java.util.Set;
 @Setter
 @Table(name = "products")
 public class Product {
-
+    //TODO add ROOM or PLACE as the main container for collection of Products
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
