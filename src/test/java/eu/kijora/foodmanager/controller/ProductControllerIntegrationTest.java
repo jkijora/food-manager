@@ -3,8 +3,13 @@ package eu.kijora.foodmanager.controller;
 import eu.kijora.foodmanager.domain.Product;
 import eu.kijora.foodmanager.repository.CategoryRepository;
 import eu.kijora.foodmanager.repository.ProductRepository;
+import eu.kijora.foodmanager.service.CategoryService;
+import eu.kijora.foodmanager.service.ProductCategoryService;
 import eu.kijora.foodmanager.service.ProductService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -27,7 +32,10 @@ public class ProductControllerIntegrationTest {
     ProductRepository productRepository;
     @MockBean
     CategoryRepository categoryRepository;
-    @SpyBean //Adds spy to Spring app context
+
+    @SpyBean //adds the spy to the Spring application context
+    ProductCategoryService productCategoryService;
+    @SpyBean
     ProductService productService;
 
     @Autowired

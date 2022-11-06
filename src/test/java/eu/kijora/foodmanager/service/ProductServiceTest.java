@@ -47,29 +47,5 @@ class ProductServiceTest {
         Assertions.assertThrows(ProductNotFoundException.class, () -> productService.findById(1L));
     }
 
-    @Test
-    void convertProductDtoIntoProduct_WhenEmptyCategoryIds_ThenDoNotCallCategoryRepository() {
-        ProductWriteModel pwm = ProductWriteModel.builder()
-                .categoryIds(Set.of())
-                .name("Name")
-                .build();
-        Product product = productService.convertProductDtoIntoProduct(pwm);
 
-        Assertions.assertEquals(0, product.getCategories().size());
-        verify(crMock, never()).findById(anyLong());
-    }
-
-    @Test
-    void convertProductDtoIntoProduct_WhenSomeCategoryIds_ThenCallCategoryRepository() {
-        when(crMock.findById(1L)).thenReturn(Optional.of(Category.builder().name("cat1").build()));
-        ProductWriteModel pwm = ProductWriteModel.builder()
-                .categoryIds(Set.of(1L))
-                .name("Name of product")
-                .build();
-        Product product = productService.convertProductDtoIntoProduct(pwm);
-
-        Assertions.assertEquals(1, product.getCategories().size());
-        Assertions.assertEquals("Name of product", product.getName());
-        verify(crMock, times(1)).findById(anyLong());
-    }
 }

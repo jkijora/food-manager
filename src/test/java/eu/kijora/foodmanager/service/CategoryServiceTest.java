@@ -44,30 +44,30 @@ class CategoryServiceTest {
         Assertions.assertThrows(CategoryNotFoundException.class, () -> categoryService.findById(1L));
     }
 
-    @Test
-    void convertCategoryDtoIntoCategory_WhenEmptyProductIds_ThenDoNotCallProductRepository() {
-        CategoryWriteModel cwm = CategoryWriteModel.builder()
-                .productIds(Set.of())
-                .name("Name of category")
-                .build();
-        Category category = categoryService.convertCategoryDtoIntoCategory(cwm);
-
-        Assertions.assertEquals(0, category.getProducts().size());
-        Assertions.assertEquals("Name of category", category.getName());
-        verify(prMock, never()).findById(anyLong());
-    }
-
-    @Test
-    void convertCategoryDtoIntoCategory_WhenSomeProductIds_ThenCallProductRepository() {
-        when(prMock.findById(1L)).thenReturn(Optional.of(Product.builder().name("product1").build()));
-        CategoryWriteModel cwm = CategoryWriteModel.builder()
-                .productIds(Set.of(1L))
-                .name("Name of category")
-                .build();
-        Category category = categoryService.convertCategoryDtoIntoCategory(cwm);
-
-        Assertions.assertEquals(1, category.getProducts().size());
-        Assertions.assertEquals("Name of category", category.getName());
-        verify(prMock, times(1)).findById(anyLong());
-    }
+//    @Test
+//    void convertCategoryDtoIntoCategory_WhenEmptyProductIds_ThenDoNotCallProductRepository() {
+//        CategoryWriteModel cwm = CategoryWriteModel.builder()
+//                .productIds(Set.of())
+//                .name("Name of category")
+//                .build();
+//        Category category = categoryService.convertCategoryDtoIntoCategory(cwm);
+//
+//        Assertions.assertEquals(0, category.getProducts().size());
+//        Assertions.assertEquals("Name of category", category.getName());
+//        verify(prMock, never()).findById(anyLong());
+//    }
+//
+//    @Test
+//    void convertCategoryDtoIntoCategory_WhenSomeProductIds_ThenCallProductRepository() {
+//        when(prMock.findById(1L)).thenReturn(Optional.of(Product.builder().name("product1").build()));
+//        CategoryWriteModel cwm = CategoryWriteModel.builder()
+//                .productIds(Set.of(1L))
+//                .name("Name of category")
+//                .build();
+//        Category category = categoryService.convertCategoryDtoIntoCategory(cwm);
+//
+//        Assertions.assertEquals(1, category.getProducts().size());
+//        Assertions.assertEquals("Name of category", category.getName());
+//        verify(prMock, times(1)).findById(anyLong());
+//    }
 }

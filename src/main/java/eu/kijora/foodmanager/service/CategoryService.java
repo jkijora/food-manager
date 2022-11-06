@@ -10,6 +10,8 @@ import eu.kijora.foodmanager.repository.CategoryRepository;
 import eu.kijora.foodmanager.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,17 +19,15 @@ import java.util.stream.Collectors;
 public class CategoryService {
 
     CategoryRepository categoryRepository;
-    ProductRepository productRepository;
-    ProductService productService;
+    ProductCategoryService productCategoryService;
 
-    public CategoryService(CategoryRepository categoryRepository, ProductRepository productRepository, ProductService productService) {
+    public CategoryService(CategoryRepository categoryRepository, ProductCategoryService productCategoryService) {
         this.categoryRepository = categoryRepository;
-        this.productRepository = productRepository;
-        this.productService = productService;
+        this.productCategoryService = productCategoryService;
     }
 
     public Category save(CategoryWriteModel cwm) {
-        return categoryRepository.save(convertCategoryDtoIntoCategory(cwm));
+        return categoryRepository.save(productCategoryService.convertCategoryDtoIntoCategory(cwm));
     }
 
     public Category findById(Long id) {
@@ -35,27 +35,35 @@ public class CategoryService {
     }
 
 
-    public CategoryReadModel convertCategoryIntoDto(Category category) {
-        return CategoryReadModel.builder()
-                .id(category.getId())
-                .auxiliaryCategory(category.isAuxiliaryCategory())
-                .name(category.getName())
-                .build();
+//    public CategoryReadModel convertCategoryIntoDto(Category category) {
+//        return CategoryReadModel.builder()
+//                .id(category.getId())
+//                .products(category.getProducts().stream().map(productService::convertProductIntoDto).collect(Collectors.toSet()))
+//                .auxiliaryCategory(category.isAuxiliaryCategory())
+//                .name(category.getName())
+//                .build();
+//    }
+//
+//    public Category convertCategoryDtoIntoCategory(CategoryWriteModel cwm) {
+//        Set<Product> products = Set.of();
+//        if (cwm.getProductIds() != null && cwm.getProductIds().size() > 0) {
+//            products = cwm.getProductIds().stream()
+//                    .map(p -> productRepository.findById(p)
+//                            .orElseThrow(() -> new ProductNotFoundException(String.format("Id %d not found in database", p))))
+//                    .collect(Collectors.toSet());
+//        }
+//        return Category.builder()
+//                .auxiliaryCategory(cwm.isAuxiliaryCategory())
+//                .name(cwm.getName())
+//                .products(products)
+//                .build();
+//    }
+
+    public void deleteById(Long id) {
+        categoryRepository.deleteById(id);
     }
 
-    public Category convertCategoryDtoIntoCategory(CategoryWriteModel cwm) {
-        Set<Product> products = Set.of();
-        if (cwm.getProductIds() != null && cwm.getProductIds().size() > 0) {
-            products = cwm.getProductIds().stream()
-                    .map(p -> productRepository.findById(p)
-                            .orElseThrow(() -> new ProductNotFoundException(String.format("Id %d not found in database", p))))
-                    .collect(Collectors.toSet());
-        }
-        return Category.builder()
-                .auxiliaryCategory(cwm.isAuxiliaryCategory())
-                .name(cwm.getName())
-                .products(products)
-                .build();
+    public List<Category> findAll() {
+        return categoryRepository.findAll();
     }
-
 }
