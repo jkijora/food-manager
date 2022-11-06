@@ -11,6 +11,7 @@ import eu.kijora.foodmanager.repository.CategoryRepository;
 import eu.kijora.foodmanager.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,26 +19,36 @@ public class ProductService {
 
     CategoryRepository categoryRepository;
     ProductRepository productRepository;
+    CategoryService categoryService;
 
-    public ProductService(CategoryRepository categoryRepository, ProductRepository productRepository) {
+    public ProductService(CategoryRepository categoryRepository, ProductRepository productRepository, CategoryService categoryService) {
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
+        this.categoryService = categoryService;
     }
 
     public Product save(ProductWriteModel pwm) {
         return productRepository.save(convertProductDtoIntoProduct(pwm));
     }
 
+    public Product findById(Long id) {
+        return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(String.format("Id %d not found in database", id)));
+    }
+
     public Product changeQuantity(Integer quantity, Long productId) {
-        Product foundProduct = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException(String.format("Id %d not found in database", productId)));
-        foundProduct.setQuantity(quantity);
-        return productRepository.save(foundProduct);
+        if (quantity >= 0) {
+            Product foundProduct = this.findById(productId);
+            foundProduct.setQuantity(quantity);
+            return productRepository.save(foundProduct);
+        } else {
+            throw new IllegalArgumentException("Not allowed to set negative quantity");
+        }
     }
 
     public ProductReadModel convertProductIntoDto(Product product) {
         return ProductReadModel.builder()
                 .productId(product.getId())
-                .categories(product.getCategories().stream().map(this::convertCategoryIntoDto).collect(Collectors.toSet()))
+                .categories(product.getCategories().stream().map(categoryService::convertCategoryIntoDto).collect(Collectors.toSet()))
                 .name(product.getName())
                 .quantity(product.getQuantity())
                 .quantityThreshold(product.getQuantityThreshold())
@@ -46,20 +57,16 @@ public class ProductService {
                 .build();
     }
 
-    public CategoryReadModel convertCategoryIntoDto(Category category) {
-        return CategoryReadModel.builder()
-                .id(category.getId())
-                .auxiliaryCategory(category.isAuxiliaryCategory())
-                .name(category.getName())
-                .build();
-    }
-
     public Product convertProductDtoIntoProduct(ProductWriteModel pwm) {
+        Set<Category> categories = Set.of();
+        if (pwm.getCategoryIds() != null && pwm.getCategoryIds().size() > 0) {
+            categories = pwm.getCategoryIds().stream()
+                    .map(c -> categoryRepository.findById(c)
+                            .orElseThrow(() -> new CategoryNotFoundException(String.format("Id %d not found in database", c))))
+                    .collect(Collectors.toSet());
+        }
         return Product.builder()
-                .categories(pwm.getCategoryIds().stream()
-                        .map(c -> categoryRepository.findById(c)
-                                .orElseThrow(() -> new CategoryNotFoundException(String.format("Id %d not found in database", c))))
-                        .collect(Collectors.toSet()))
+                .categories(categories)
                 .comment(pwm.getComment())
                 .closestExpiration(pwm.getClosestExpiration())
                 .name(pwm.getName())

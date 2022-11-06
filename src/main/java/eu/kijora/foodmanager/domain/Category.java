@@ -1,17 +1,17 @@
 package eu.kijora.foodmanager.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

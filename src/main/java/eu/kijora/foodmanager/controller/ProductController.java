@@ -32,7 +32,8 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ProductReadModel getProduct(@PathVariable Long id) {
-        return productService.convertProductIntoDto(productRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found")));
+        Product product = productService.findById(id);
+        return productService.convertProductIntoDto(product);
     }
 
     @GetMapping

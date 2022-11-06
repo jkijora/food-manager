@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -38,10 +39,19 @@ public class ProductControllerIntegrationTest {
         when(productRepository.findAll()).thenReturn(products);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/products"))
-                        .andDo(print())
-                                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
                 .andExpect(jsonPath("$[0].name").value("ketchup"))
                 .andExpect(jsonPath("$[1].name").value("flour"));
 
+    }
+
+    @Test
+    public void getProductById_WhenNotFound_Then404() throws Exception {
+        when(productRepository.findById(1L)).thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/product/1"))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
 }
