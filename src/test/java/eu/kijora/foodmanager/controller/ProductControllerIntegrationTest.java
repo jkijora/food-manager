@@ -1,29 +1,20 @@
 package eu.kijora.foodmanager.controller;
 
 import eu.kijora.foodmanager.domain.Product;
-import eu.kijora.foodmanager.dto.ProductReadModel;
 import eu.kijora.foodmanager.repository.CategoryRepository;
 import eu.kijora.foodmanager.repository.ProductRepository;
-import eu.kijora.foodmanager.service.MappingService;
-import org.junit.jupiter.api.Assertions;
+import eu.kijora.foodmanager.service.ProductService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -36,7 +27,7 @@ public class ProductControllerIntegrationTest {
     @MockBean
     CategoryRepository categoryRepository;
     @SpyBean //Adds spy to Spring app context
-    MappingService mappingService;
+    ProductService productService;
 
     @Autowired
     MockMvc mockMvc;

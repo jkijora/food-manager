@@ -1,18 +1,17 @@
 package eu.kijora.foodmanager.controller;
 
-import eu.kijora.foodmanager.domain.Category;
 import eu.kijora.foodmanager.domain.Product;
 import eu.kijora.foodmanager.dto.ProductReadModel;
+import eu.kijora.foodmanager.dto.ProductWriteModel;
 import eu.kijora.foodmanager.repository.CategoryRepository;
 import eu.kijora.foodmanager.repository.ProductRepository;
-import eu.kijora.foodmanager.service.MappingService;
+import eu.kijora.foodmanager.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -23,23 +22,23 @@ public class ProductController {
 
     ProductRepository productRepository;
     CategoryRepository categoryRepository;
-    MappingService mappingService;
+    ProductService productService;
 
-    public ProductController(ProductRepository productRepository, CategoryRepository categoryRepository, MappingService mappingService) {
+    public ProductController(ProductRepository productRepository, CategoryRepository categoryRepository, ProductService productService) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
-        this.mappingService = mappingService;
+        this.productService = productService;
     }
 
     @GetMapping("/{id}")
     public ProductReadModel getProduct(@PathVariable Long id) {
-        return mappingService.convertProductIntoDto(productRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found")));
+        return productService.convertProductIntoDto(productRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found")));
     }
 
     @GetMapping
     public ResponseEntity<List<ProductReadModel>> getAllProducts() {
         return ResponseEntity.ok(productRepository.findAll().stream()
-                .map(p -> mappingService.convertProductIntoDto(p))
+                .map(p -> productService.convertProductIntoDto(p))
                 .collect(Collectors.toList()));
     }
 
@@ -49,29 +48,21 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    //TODO write model
-    public ProductReadModel addProduct(@RequestBody Product product) {
-        Set<Category> collectedCategories = product.getCategories().stream()
-                .map(c -> categoryRepository.findById(c.getId()).orElseThrow(
-                        () -> new CategoryNotFoundException(String.format("Id %d not found in database", c.getId()))))
-                .collect(Collectors.toSet());
-        product.setCategories(collectedCategories);
-        return mappingService.convertProductIntoDto(productRepository.save(product));
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ProductReadModel addProduct(@RequestBody ProductWriteModel productWriteModel) {
+        Product product = productService.save(productWriteModel);
+        log.debug("Successfully added a new product");
+        return productService.convertProductIntoDto(product);
     }
 
     @PatchMapping(
             value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Product> changeQuantity(@RequestBody Integer quantity, @PathVariable Long id) {
-
-        Product foundProduct = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(String.format("Id %d not found in database", id)));
-        foundProduct.setQuantity(quantity);
-        Product saved = productRepository.save(foundProduct);
+    public ResponseEntity<ProductReadModel> changeQuantity(@RequestBody Integer quantity, @PathVariable Long id) {
+        Product product = productService.changeQuantity(quantity, id);
         log.debug("Successfully changed the quantity of the product");
-        return ResponseEntity.ok().body(saved);
+        return ResponseEntity.ok().body(productService.convertProductIntoDto(product));
     }
 
 
