@@ -1,4 +1,4 @@
-package eu.kijora.foodmanager.dto;
+package eu.kijora.foodmanager.dto.product;
 
 import lombok.Builder;
 import lombok.Data;

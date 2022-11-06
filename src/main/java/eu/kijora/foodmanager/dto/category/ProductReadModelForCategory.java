@@ -1,5 +1,6 @@
-package eu.kijora.foodmanager.dto;
+package eu.kijora.foodmanager.dto.category;
 
+import eu.kijora.foodmanager.dto.product.CategoryReadModelForProduct;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,12 +9,12 @@ import java.util.Set;
 
 @Data
 @Builder
-public class ProductReadModel {
+public class ProductReadModelForCategory {
 
     private Long productId;
     private int quantity;
     private String name;
-    private Set<CategoryReadModel> categories;
+    private Set<CategoryReadModelForProduct> categories;
     private String comment;
     private int quantityThreshold;
     private LocalDate closestExpiration;

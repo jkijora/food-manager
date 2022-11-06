@@ -1,10 +1,6 @@
 package eu.kijora.foodmanager.service;
 
 import eu.kijora.foodmanager.controller.ProductNotFoundException;
-import eu.kijora.foodmanager.domain.Category;
-import eu.kijora.foodmanager.domain.Product;
-import eu.kijora.foodmanager.dto.CategoryWriteModel;
-import eu.kijora.foodmanager.dto.ProductWriteModel;
 import eu.kijora.foodmanager.repository.CategoryRepository;
 import eu.kijora.foodmanager.repository.ProductRepository;
 import org.junit.jupiter.api.Assertions;
@@ -16,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
-import java.util.Set;
 
 import static org.mockito.Mockito.*;
 

@@ -1,4 +1,4 @@
-package eu.kijora.foodmanager.dto;
+package eu.kijora.foodmanager.dto.category;
 
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +12,6 @@ public class CategoryReadModel {
     private Long id;
     String name;
     boolean auxiliaryCategory;
-    //TODO Another projection but more Category focused
-//    private Set<ProductReadModel> products;
+    private Set<ProductReadModelForCategory> products;
 
 }

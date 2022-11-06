@@ -1,8 +1,8 @@
 package eu.kijora.foodmanager.controller;
 
 import eu.kijora.foodmanager.domain.Product;
-import eu.kijora.foodmanager.dto.ProductReadModel;
-import eu.kijora.foodmanager.dto.ProductWriteModel;
+import eu.kijora.foodmanager.dto.product.ProductReadModel;
+import eu.kijora.foodmanager.dto.product.ProductWriteModel;
 import eu.kijora.foodmanager.service.ProductCategoryService;
 import eu.kijora.foodmanager.service.ProductService;
 import lombok.extern.slf4j.Slf4j;

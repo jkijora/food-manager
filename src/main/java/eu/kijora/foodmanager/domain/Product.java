@@ -26,8 +26,6 @@ public class Product {
     @ManyToMany(fetch = FetchType.LAZY)//(cascade = {CascadeType.PERSIST, CascadeType.MERGE}) //Telling hibernate to save the Category (transient instance) while saving the parent object of Product
     @JoinTable(name = "categories_products", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name="category_id"))
     private Set<Category> categories;
-//    private String category;
-
     @Nullable
     private String comment;
     @Nullable
