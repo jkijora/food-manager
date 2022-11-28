@@ -18,7 +18,7 @@ import java.util.Set;
 public class Product {
     //TODO add ROOM or PLACE as the main container for collection of Products
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
     private int quantity;

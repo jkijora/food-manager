@@ -16,10 +16,9 @@ create table products (
 );
 
 create table categories_products (
-    product_id      bigint  foreign key references products(id)    not null,
-    category_id     bigint  foreign key references categories(id)    not null,
-    primary key (product_id, category_id)
+    product_id bigint not null,
+    category_id bigint not null,
+  	FOREIGN KEY (product_id) REFERENCES products(id),
+  	FOREIGN KEY (category_id) REFERENCES categories(id),
+  	primary key (product_id, category_id)
 );
-
--- alter table categories_products add foreign key(category_id) references  categories(id);
--- alter table categories_products add foreign key(product_id)  references  products(id);
