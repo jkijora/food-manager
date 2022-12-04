@@ -1,17 +1,17 @@
 create table categories (
-    id                  bigint          not null,
-    auxiliary_category  boolean         not null,
+    id                  bigint  AUTO_INCREMENT    not null,
+    auxiliary_category  boolean                   not null,
     name                varchar(255),
     primary key (id)
 );
 
 create table products (
-    id                  bigint          not null,
+    id                  bigint  AUTO_INCREMENT  not null,
     closest_expiration  date,
     comment             varchar(255),
     name                varchar(255),
-    quantity            integer         not null,
-    quantity_threshold  integer         not null,
+    quantity            integer                 not null,
+    quantity_threshold  integer                 not null,
     primary key (id)
 );
 

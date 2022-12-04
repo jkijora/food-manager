@@ -3,18 +3,5 @@ server:
 spring:
   jpa:
     show-sql: true
-    hibernate:
-#     ddl-auto: update
-      ddl-auto: validate
-  h2.console:
-    enabled: true
-    path: '/console'
-  datasource:
-#    url: 'jdbc:h2:mem:testdb'
-    url: 'jdbc:h2:file:C:\Users\Jedrzej\Documents\coding\food-manager\food-manager-db'
-    username: sa
-    password:
   flyway:
     enabled: true
-
-#debug: true

@@ -1,0 +1,10 @@
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+#     ddl-auto: update
+      ddl-auto: validate
+  datasource:
+    url: 'jdbc:mysql://db4free.net:3306/food_manager_db'
+    username: # use vm options -Dspring.datasource.username=...
+    password: # use vm options -Dspring.datasource.password=...
